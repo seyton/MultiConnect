@@ -20,7 +20,7 @@ let DEFAULT_PLAYER_TEXT = "Current Player: -"
 class OptionsView: UIView {
   
   var moreButton = UIButton(frame: CGRect(x: 20, y: 10, width: 70, height: 44))
-  var currentPlayerLabel = UILabel(frame: CGRect(x: -170, y: 8, width: 150, height: 44))
+  var currentPlayerLabel = UILabel(frame: CGRect(x: 190, y: 8, width: 175, height: 44))
   
   var expanded = false
   var screenWidth = UIScreen.mainScreen().bounds.width
@@ -71,7 +71,7 @@ class OptionsView: UIView {
 //    
     }else {
       createRestartButton()
-      createRestartGame()
+
       frame = CGRect(x: 0, y: screenHeight - 60, width:screenWidth, height: screenWidth)
       
       UIView.animateWithDuration(0.7, animations: { () -> Void in
@@ -91,12 +91,14 @@ class OptionsView: UIView {
     restartButton.setTitle("Restart Game", forState: .Normal)
     restartButton.titleLabel?.font = MainTheme.buttonFont
     restartButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-    restartButton.addTarget(self, action: "restartGame", forControlEvents: .TouchUpInside)
+    restartButton.addTarget(self, action: "createRestartGame", forControlEvents: .TouchUpInside)
     addSubview(restartButton)
   }
   
   func createRestartGame() {
     delegate?.beginErase()
+    expand()
+    
   }
   
   func backButton() {
@@ -115,7 +117,7 @@ class OptionsView: UIView {
   //MARK: Set Player
   func setCurrentPlayerAsX() {
     println("Setting player X")
-//    currentPlayerString.replaceCharactersInRange(NSMakeRange(16, 1), withString: "X")
+    currentPlayerString.replaceCharactersInRange(NSMakeRange(16, 1), withString: "X")
     currentPlayerString.addAttribute(NSForegroundColorAttributeName, value:UIColor.blackColor(), range: NSMakeRange(16, 1))
     currentPlayerLabel.attributedText = currentPlayerString
   }

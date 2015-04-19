@@ -19,6 +19,6 @@ struct MainTheme {
   
   static let cellFont = UIFont(name: "Chalkduster", size: 40)
   static let buttonFont = UIFont(name: "Chalkduster", size: 15)
-  static let labelFont = UIFont(name: "Chalkduster", size: 18)
+  static let labelFont = UIFont(name: "Chalkduster", size: 15)
   
 }
