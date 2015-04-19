@@ -23,7 +23,7 @@ enum PlayerType: Int {
 }
 
 let NUMBER_CELL_PER_ROW = 40
-let WINNER_COUNT = 5
+let WINNER_COUNT = 4
 
 class GridViewController: UIViewController {
 
@@ -31,6 +31,7 @@ class GridViewController: UIViewController {
   var scroller: UIScrollView!
   var board: UIView!
   var cells = [[GridCellView]]()
+  var optionView: OptionsView!
   
   override func viewDidLoad() {
     
@@ -63,7 +64,8 @@ class GridViewController: UIViewController {
     view.backgroundColor = MainTheme.baseBackgroundColor
 
     setupGridCells()
-    
+    setupOptionView()
+
     currentTurn = .PlayerX
   }
 
@@ -118,10 +120,12 @@ class GridViewController: UIViewController {
   
   func playerXTurn() {
     currentTurn = .PlayerX
+    optionView.setCurrentPlayerAsX()
   }
   
   func playerOTurn() {
     currentTurn = .PlayerO
+    optionView.setCurrentPlayerAsO()
   }
   
   func checkForWinWithX(x: Int, y: Int) {
@@ -269,9 +273,24 @@ extension GridViewController: UIAlertViewDelegate {
   
   func showWinner() {
     println("Winner, Winner, Chicken Dinner!")
+    var winningPlayer:String
     
-    var winText = "Winner, Winner \(currentTurn.playerName()) Gets a chicken dinner!"
+    if currentTurn == .PlayerX {
+      winningPlayer = "Player O"
+    } else {
+      winningPlayer = "Player X"
+    }
+    
+    var winText = "Winner, Winner \(winningPlayer) Gets a chicken dinner!"
     let winAlert = UIAlertController(title: "Winner!", message: winText, preferredStyle: .Alert)
+    let newGameAction = UIAlertAction(title: "New Game", style: .Default) { (action) -> Void in
+        self.eraseGrid()
+    }
+    
+    winAlert.addAction(newGameAction)
+    presentViewController(winAlert, animated: true, completion: nil)
+    eraseGrid()
+    
   }
   
   func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
@@ -282,4 +301,49 @@ extension GridViewController: UIAlertViewDelegate {
   
 }
 
-//extension GridViewController: GameOptionsDelegate { }
+
+//MARK: OptionView Delegate
+extension GridViewController: OptionsDelegate {
+  
+  func setupOptionView() {
+    
+    let fullWidth = view.frame.size.width
+    let fullHeight = view.frame.size.height
+
+    optionView = OptionsView(frame: CGRect(x: 0, y: fullHeight - 60, width: fullWidth, height: 60))
+    optionView.delegate = self
+    optionView.setCurrentPlayerAsX()
+    
+    view.addSubview(optionView)
+    
+  }
+  
+  func goBack() {
+    // Nothing yet..
+  }
+  
+  func beginErase() {
+    println("begin the address")
+    var warnMessage = "Are you sure you want to clear the board?"
+    var warnAlert = UIAlertController(title: "Erase Board", message: warnMessage, preferredStyle: .Alert)
+   
+    var confirmAction = UIAlertAction(title: "Confirm", style: .Destructive) { (action) -> Void in
+      self.eraseGrid()
+    }
+    var cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+    
+    warnAlert.addAction(cancelAction)
+    warnAlert.addAction(confirmAction)
+    
+    presentViewController(warnAlert, animated: true, completion: nil)
+    
+  }
+  
+}
+
+
+
+
+
+
+
